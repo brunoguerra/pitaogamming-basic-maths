@@ -120,6 +120,10 @@ def main(winstyle=0):
     screen.blit(background, (0, 0))
     pg.display.flip()
 
+    Color_line=(255,0,0)
+    eixo = pg.Surface(SCREENRECT.size)
+    pygame.draw.line(eixo, Color_line, (60, 80), (130, 100))
+
     # # load the sound effects
     boom_sound = load_sound("boom.wav")
     shoot_sound = load_sound("car_door.wav")
@@ -161,7 +165,7 @@ def main(winstyle=0):
     # # Run our main loop whilst the player is alive.
     # while player.alive():
     pos = (200.0, 200.0)
-    POS_DELTA = 0.1
+    POS_DELTA = 0.03
     gravity = 9.7
     shot_velocity_x = 0.0
     shot_velocity_y = 0.0
@@ -184,22 +188,24 @@ def main(winstyle=0):
                 # x² + x + 3 = y
                 # 1 - 4*1*c = -11
                 # x = -1 
-                bx = pos[0]
-                x = ax
-                y = x**2 + x + 3
-                pos = (bx + x, y)
-                ax += POS_DELTA
+                if ax < 30 and pos[1] < SCREENRECT.bottom:
+                    bx = pos[0]
+                    by = pos[1]
+                    x = ax
+                    y = 2*(x**2) - 6*x + 2
+                    pos = (bx + x, by + y)
+                    ax += POS_DELTA
+                    print(pos)
 
-                if ax > 30:
-                    ax = 0
         
         screen.blit(background, (0.0, 0.0))
+        screen.blit(eixo, (0.0, 0.0))
         screen.blit(shot_rotated, pos)
         w, h = pygame.display.get_surface().get_size()
-        if pos[0] > w:
-            pos = (0, pos[1])
-        if pos[1] > h:
-            pos = (pos[0], 0)
+        # if pos[0] > w:
+        #     pos = (0, pos[1])
+        # if pos[1] > h:
+        #     pos = (pos[0], 0)
 
         pg.display.update()
 
